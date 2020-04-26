@@ -4,18 +4,22 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"github.com/magiconair/properties"
 )
 
 var db *sql.DB
+var props *properties.Properties
 
 func Init() {
 
-	driverName := getDbConfig("DB_DRIVER_NAME", "mysql")
-	user := getDbConfig("DB_USER_NAME", "localuser")
-	password := getDbConfig("DB_USER_PASSWORD", "localuser")
-	host := getDbConfig("DB_HOST", "ccu-database-1.cg3rhofjy8l3.us-east-2.rds.amazonaws.com")
-	port := getDbConfig("DB_PORT", "3306")
-	schema := getDbConfig("DB_SCHEMA", "activity")
+	loadPropertiesFile()
+
+	driverName := getDbConfig("DB_DRIVER_NAME")
+	user := getDbConfig("DB_USER_NAME")
+	password := getDbConfig("DB_USER_PASSWORD")
+	host := getDbConfig("DB_HOST")
+	port := getDbConfig("DB_PORT")
+	schema := getDbConfig("DB_SCHEMA")
 
 	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", user, password, host, port, schema)
 
@@ -46,10 +50,15 @@ func CloseDb() {
 }
 
 // Returns the db config value for provided key or returns default value if env variable not set
-func getDbConfig(key string, defaultValue string) (retValue string) {
+func getDbConfig(key string) string {
 	if os.Getenv(key) != "" {
 		return os.Getenv(key)
 	}
+	defaultValue, _ := props.Get(key);
 	fmt.Printf("Env variable '%s' not found. Using default value: %s\n", key, defaultValue)
 	return defaultValue
+}
+
+func loadPropertiesFile() {
+	props = properties.MustLoadFile("${HOME}/defaultDbConfigs.properties", properties.UTF8)
 }

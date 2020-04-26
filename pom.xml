@@ -4,25 +4,25 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.example.ccu</groupId>
-    <artifactId>workout-plan-notification</artifactId>
+    <groupId>com.chimachris</groupId>
+    <artifactId>workout-plan-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>workout-plan-notification</name>
+    <name>workout-plan-service</name>
     <packaging>mvn-golang</packaging>
-    <!--<description>This project is an AWS Lambda Function for a Central Logging Service written in Go. The binary is-->
-        <!--created as well as a zip file.-->
-    <!--</description>-->
+    <description>This project is an AWS Lambda Function for a Workout Plan Service written in Go. The binary is
+        created as well as a zip file.
+    </description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <go.sdk.version>1.16.4</go.sdk.version>
+        <go.sdk.version>1.10.1</go.sdk.version>
         <mvn.golang.wrapper.version>2.3.4</mvn.golang.wrapper.version>
         <mvn.golang.disable.ssl.check>true</mvn.golang.disable.ssl.check>
-        <target.name>workout-plan-notification</target.name>
+        <target.name>workout-plan-service</target.name>
     </properties>
 
     <build>
-        <sourceDirectory>${basedir}${file.separator}src</sourceDirectory>
+        <sourceDirectory>cmd</sourceDirectory>
         <directory>${basedir}${file.separator}target</directory>
         <defaultGoal>clean package</defaultGoal>
 
@@ -54,15 +54,9 @@
                                 <flag>-u</flag>
                             </buildFlags>
                             <packages>
-                                <!--<package>github.com/aws/aws-lambda-go/lambda</package>-->
-                                <!--<package>github.com/aws/aws-sdk-go/aws</package>-->
-                                <!--<package>github.com/aws/aws-sdk-go/service</package>-->
-                                <!--<package>github.com/aws/aws-sdk-go/service/sqs</package>-->
-                                <!--<package>github.com/aws/aws-sdk-go/service/sqs/sqsiface</package>-->
-                                <!--<package>github.com/jmespath/go-jmespath</package>-->
-                                <!--<package>github.com/sirupsen/logrus</package>-->
-                                <!--<package>github.com/stretchr/testify/assert</package>-->
-                                <!--<package>golang.org/x/tools/cmd/godoc</package>-->
+                                <package>github.com/aws/aws-lambda-go/lambda</package>
+                                <package>github.com/jucardi/go-streams/streams</package>
+                                <package>github.com/magiconair/properties</package>
                             </packages>
                         </configuration>
                     </execution>

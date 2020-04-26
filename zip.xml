@@ -11,7 +11,7 @@
         <fileSet>
             <directory>${project.build.directory}</directory>
             <includes>
-                <include>workout-plan-notification-${version}</include>
+                <include>workout-plan-service-${version}</include>
             </includes>
             <outputDirectory>/</outputDirectory>
         </fileSet>
