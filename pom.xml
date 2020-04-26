@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example.ccu</groupId>
+    <artifactId>workout-plan-notification</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>workout-plan-notification</name>
+    <packaging>mvn-golang</packaging>
+    <!--<description>This project is an AWS Lambda Function for a Central Logging Service written in Go. The binary is-->
+        <!--created as well as a zip file.-->
+    <!--</description>-->
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <go.sdk.version>1.16.4</go.sdk.version>
+        <mvn.golang.wrapper.version>2.3.4</mvn.golang.wrapper.version>
+        <mvn.golang.disable.ssl.check>true</mvn.golang.disable.ssl.check>
+        <target.name>workout-plan-notification</target.name>
+    </properties>
+
+    <build>
+        <sourceDirectory>${basedir}${file.separator}src</sourceDirectory>
+        <directory>${basedir}${file.separator}target</directory>
+        <defaultGoal>clean package</defaultGoal>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <followSymLinks>false</followSymLinks>
+                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                    <filesets>
+                        <fileset>
+                            <directory>${basedir}${file.separator}target</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.igormaznitsa</groupId>
+                <artifactId>mvn-golang-wrapper</artifactId>
+                <version>${mvn.golang.wrapper.version}</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>default-get</id>
+                        <configuration>
+                            <buildFlags>
+                                <flag>-u</flag>
+                            </buildFlags>
+                            <packages>
+                                <!--<package>github.com/aws/aws-lambda-go/lambda</package>-->
+                                <!--<package>github.com/aws/aws-sdk-go/aws</package>-->
+                                <!--<package>github.com/aws/aws-sdk-go/service</package>-->
+                                <!--<package>github.com/aws/aws-sdk-go/service/sqs</package>-->
+                                <!--<package>github.com/aws/aws-sdk-go/service/sqs/sqsiface</package>-->
+                                <!--<package>github.com/jmespath/go-jmespath</package>-->
+                                <!--<package>github.com/sirupsen/logrus</package>-->
+                                <!--<package>github.com/stretchr/testify/assert</package>-->
+                                <!--<package>golang.org/x/tools/cmd/godoc</package>-->
+                            </packages>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>default-build</id>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                        <configuration>
+                            <strip>true</strip>
+                            <targetOs>linux</targetOs>
+                            <targetArch>amd64</targetArch>
+                            <packages>
+                                <app>main.go</app>
+                            </packages>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>showEnvVars</id>
+                        <goals>
+                            <goal>custom</goal>
+                        </goals>
+                        <configuration>
+                            <customCommand>env</customCommand>
+                            <echo>Displaying Go environment variables</echo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>zip.xml</descriptor>
+                            </descriptors>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
