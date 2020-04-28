@@ -16,18 +16,6 @@ const ResetCoreConsecutiveCounter = "UPDATE activity.activity acty SET acty.cons
 
 const IncreaseCoreConsecutiveCounter = "UPDATE activity.activity acty SET acty.consecutive_days = consecutive_days + 1 WHERE muscle = 'CORE'"
 
-func TestHandler() (string, error) {
-	// initialize db
-	db.Init()
-
-	fmt.Println("Test handler called.")
-
-	// defer closing database connection until after the function has finished executing
-	defer db.CloseDb()
-
-	return "test", nil
-}
-
 func Handler() {
 	// initialize db
 	db.Init()

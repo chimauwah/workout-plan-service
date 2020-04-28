@@ -10,18 +10,18 @@ variable "common_tags" {
   type = map
   default = {
     "BusinessUnit" = "ChimaChris"
-    "App"          = "Workout Plan Service"
-    "Provisioner"  = "Terraform"
-    "ManagedBy"    = "ChimaChris"
+    "App" = "Workout Plan Service"
+    "Provisioner" = "Terraform"
+    "ManagedBy" = "ChimaChris"
   }
 }
 
 # Lambda variables
 variable "lambda_timeout_seconds" {
-  default = 30
+  default = 15
 }
 variable "lambda_memory_size" {
-  default = 256
+  default = 128
 }
 variable "lambda_zip_location" {
   default = "../target/workout-plan-service-0.0.1-SNAPSHOT.zip"
@@ -40,3 +40,17 @@ variable "db_user_password" {}
 variable "db_host" {}
 variable "db_port" {}
 variable "db_schema" {}
+
+# vpc variables
+variable "subnet_ids" {
+  type = list
+  default = [
+    "subnet-e62cd19d",
+    "subnet-0c839246",
+    "subnet-c9c960a0"]
+}
+variable "security_group_ids" {
+  type = list
+  default = [
+    "sg-bb308cd2"]
+}

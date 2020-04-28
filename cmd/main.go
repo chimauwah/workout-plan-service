@@ -8,6 +8,5 @@ import (
 // main is the entry point for this service and starts Lambda execution
 func main() {
 
-	//lambda.Start(handler)
-	lambda.Start(api.TestHandler)
+	lambda.Start(api.Handler)
 }
