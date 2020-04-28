@@ -3,4 +3,11 @@
 *.iml
 target/
 }
+
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+
+# ignore these because contains db configs
+terraform.tfvars
 defaultDbConfigs.properties
