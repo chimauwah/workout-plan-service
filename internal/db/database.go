@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"github.com/magiconair/properties"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var db *sql.DB
@@ -31,7 +32,7 @@ func Init() {
 		panic(err.Error())
 	}
 
-	fmt.Println("Sucessfully connected to MySQL database.")
+	fmt.Println("Sucessfully connected to database.")
 
 	setDb(db)
 }
@@ -60,5 +61,5 @@ func getDbConfig(key string) string {
 }
 
 func loadPropertiesFile() {
-	props = properties.MustLoadFile("${HOME}/defaultDbConfigs.properties", properties.UTF8)
+	props = properties.MustLoadFile("defaultDbConfigs.properties", properties.UTF8)
 }
