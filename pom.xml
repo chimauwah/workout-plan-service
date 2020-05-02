@@ -57,6 +57,8 @@
                                 <package>github.com/aws/aws-lambda-go/lambda</package>
                                 <package>github.com/jucardi/go-streams/streams</package>
                                 <package>github.com/magiconair/properties</package>
+                                <package>github.com/awslabs/aws-lambda-go-api-proxy/gorillamux</package>
+                                <package>github.com/gorilla/mux</package>
                             </packages>
                         </configuration>
                     </execution>

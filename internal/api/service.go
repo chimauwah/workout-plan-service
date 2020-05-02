@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"github.com/jucardi/go-streams/streams"
 	"time"
+	"net/http"
+	"encoding/json"
+	"strconv"
 )
 
 const GetMuscleCategoryAndMaxExercisesForTodaysWorkoutSQL = "select mgm.muscle, dgm.category, dgm.max from activity.day_group_mapping dgm join activity.muscle_group_mapping mgm on dgm.`group` = mgm.`group` where dgm.day = ?"
@@ -16,16 +19,16 @@ const ResetCoreConsecutiveCounter = "UPDATE activity.activity acty SET acty.cons
 
 const IncreaseCoreConsecutiveCounter = "UPDATE activity.activity acty SET acty.consecutive_days = consecutive_days + 1 WHERE muscle = 'CORE'"
 
-func Handler() {
+func GenerateWorkout(w http.ResponseWriter, r *http.Request) {
 	// initialize db
-	db.Init()
+	//db.Init()
 
 	// defer closing database connection until after the function has finished executing
-	defer db.CloseDb()
+	//defer db.CloseDb()
 
 	currentTime := time.Now()
 	currentDay := currentTime.Weekday()
-	activitiesToPerform := buildWorkout(currentDay)
+	activitiesToPerform := getActivitiesForDay(currentDay)
 
 	// TODO: MAAYYYYYBE, alternate lowerbody and upper body for stretching?? hip, glute, tfl | ankle, achilles, calf, adductors??
 
@@ -94,9 +97,12 @@ func Handler() {
 	// TODO: order workout  1) AM tissue work | 2) core  3) stretch | 4) resistance/exercises | 5) PM tissue work??
 
 	// TODO: how long to do plank??
+
+	json.NewEncoder(w).Encode(createResponseMap(true, "200", ""))
+	return
 }
 
-func buildWorkout(currentDay time.Weekday) []model.Activity {
+func getActivitiesForDay(currentDay time.Weekday) []model.Activity {
 
 	// for today, select muscle we are doing, the category of it, and max exercises to do for that muscle
 	results1, err := db.GetDb().Query(GetMuscleCategoryAndMaxExercisesForTodaysWorkoutSQL, currentDay)
@@ -150,8 +156,8 @@ func getCoreWorkout() []model.Activity {
 		coreActivities = append(coreActivities, coreActivity)
 	}
 
-	// REALLY NEED TO DO THIS ONLY WHEN WORKOUT HAS BEEN ACCEPTED!!
-	//updateCoreCounter()
+	// TODO: REALLY NEED TO DO THIS ONLY WHEN WORKOUT HAS BEEN ACCEPTED!!
+	updateCoreCounter()
 
 	return coreActivities
 }
@@ -166,12 +172,15 @@ func updateCoreCounter() {
 
 // EVERY 3 DAYS, RESET CONSECUTIVE DAYS COUNTER (mostly for planks) - take a break from core every 3 days
 // maybe call this restfully or something using an event trigger
-func resetCoreCounters() {
+func ResetCoreCounters(w http.ResponseWriter, r *http.Request) {
 	resetPreparedStmt, err := db.GetDb().Prepare(ResetCoreConsecutiveCounter)
 	if err != nil {
 		panic(err.Error())
 	}
 	resetPreparedStmt.Exec()
+	fmt.Println("Core counter reset to 0.")
+	json.NewEncoder(w).Encode(createResponseMap(true, "200", ""))
+	return
 }
 
 func printWorkoutFormatted(activitiesToPerform []model.Activity) {
@@ -182,6 +191,14 @@ func printWorkoutFormatted(activitiesToPerform []model.Activity) {
 			fmt.Printf("%s \n\t%s\n", activity.Muscle, activity.Name)
 		}
 	}
+}
+
+func createResponseMap(success bool, code string, msg string) map[string]string {
+	res := map[string]string{
+		"Success": strconv.FormatBool(success),
+		"Status":  code,
+		"Message": msg}
+	return res
 }
 
 // have custom struct (Attribute) implement Scanner interface which will be called by driver
